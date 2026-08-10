@@ -27,7 +27,7 @@ Angular 11 課程練習專案，將 Start Bootstrap 的 SB Admin 2 後台版型�
 
 ## 安裝
 
-目前 `package-lock.json` 是空檔，且新版 npm 會遇到 `codelyzer` peer dependency 衝突，因此不能使用 `npm ci`。使用：
+目前 `package-lock.json` 已不存在（原為空檔），且新版 npm 會遇到 `codelyzer` peer dependency 衝突，因此不能使用 `npm ci`。使用：
 
 ```bash
 npm install --legacy-peer-deps
