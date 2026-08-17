@@ -90,7 +90,9 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/vendor/chart.js/Chart.min.js"
+            ]
           }
         },
         "lint": {

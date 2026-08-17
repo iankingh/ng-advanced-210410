@@ -5,7 +5,7 @@ export function ValidateTwId(c: FormControl): ValidationErrors | null {
   if (!c.value) {
     return null;
   }
-  let result = isNationalIdentificationNumberValid(c.value);
+  const result = isNationalIdentificationNumberValid(c.value);
   if (result) {
     return null;
   } else {

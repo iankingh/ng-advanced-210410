@@ -32,9 +32,11 @@ export class ColorsComponent implements OnInit {
     this.readData();
   }
 
-  readData() {
-    let seo = this.route.snapshot.data["seo"] as SeoData;
-    console.log(seo.title);
+  readData(): void {
+    const seo = this.route.snapshot.data.seo as SeoData | undefined;
+    if (seo) {
+      console.log(seo.title);
+    }
   }
 
   plusOne() {
@@ -45,12 +47,12 @@ export class ColorsComponent implements OnInit {
       queryParams: {
         page: 1
       }
-    })
+    });
   }
 
 }
 
-interface SeoData{
+interface SeoData {
   title: string;
-  desc: string
+  desc: string;
 }

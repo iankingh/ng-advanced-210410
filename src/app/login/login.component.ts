@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   templateUrl: './login.component.html',
@@ -15,17 +16,18 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   origClass = '';
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.origClass = document.body.className;
     document.body.className = 'bg-gradient-primary';
   }
 
-  onSubmit(form: NgForm) {
-    console.log(form);
+  onSubmit(form: NgForm): void {
     if (form.valid) {
-      console.log('送出表單', form.value);
+      localStorage.setItem('token', 'demo-session');
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+      this.router.navigateByUrl(returnUrl);
     }
   }
 

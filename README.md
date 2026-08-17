@@ -6,7 +6,7 @@ Angular 11 課程練習專案，將 Start Bootstrap 的 SB Admin 2 後台版型�
 
 - SB Admin 2 dashboard、layout、components、utilities 與 404 頁面
 - Hash-based routing、巢狀子路由與 `components` lazy-loaded module
-- `CanActivateChild` 守衛；以瀏覽器 `localStorage` 的 `token` 判斷並導向 `/login`
+- `CanActivateChild` 守衛；以瀏覽器 `localStorage` 的 demo token 判斷並導向 `/login`
 - Template-driven login form
 - Reactive login form、動態 `FormArray`、欄位驗證與表單 reset
 - `taiwan-id-validator2` 自訂 validator
@@ -74,7 +74,8 @@ Angular CLI 會以 `src/environments/environment.ts` 建置開發版，productio
 - Angular 11、TSLint、Protractor 與多項相依套件均已過維護期。
 - 在 Node.js 26 上 production build 會因舊版 webpack/OpenSSL 相容性而失敗；請使用上述舊版 Node.js 環境。
 - unit tests 需要 Chrome；未安裝瀏覽器時 `npm test` 無法啟動 `ChromeHeadless`。
-- 守衛只檢查本地 `token` 是否存在，沒有真正的登入或後端驗證流程；login forms 目前只將資料輸出到 console。
+- 兩個 login form 驗證通過後會建立本機 demo token，導回守衛保存的 `returnUrl`；
+  Logout 會清除 token。這只是前端路由教學，不是真正的登入或後端驗證流程。
 
 ## 課程資源
 

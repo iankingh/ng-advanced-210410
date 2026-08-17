@@ -1,29 +1,34 @@
 export function chartAreaDemo() {
-  (Chart.defaults.global.defaultFontFamily = 'Nunito'),
-    '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+  Chart.defaults.global.defaultFontFamily =
+    'Nunito, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
   Chart.defaults.global.defaultFontColor = '#858796';
-  function number_format(number, decimals?, dec_point?, thousands_sep?) {
+  const numberFormat = (input, decimals?, decimalPoint?, thousandsSeparator?) => {
     // *     example: number_format(1234.56, 2, ',', ' ');
     // *     return: '1 234,56'
-    number = (number + '').replace(',', '').replace(' ', '');
-    var n = !isFinite(+number) ? 0 : +number, prec = !isFinite(+decimals) ? 0 : Math.abs(decimals), sep = typeof thousands_sep === 'undefined' ? ',' : thousands_sep, dec = typeof dec_point === 'undefined' ? '.' : dec_point, s: any = '', toFixedFix = function (n, prec) {
-      var k = Math.pow(10, prec);
-      return '' + Math.round(n * k) / k;
+    input = (input + '').replace(',', '').replace(' ', '');
+    const numericValue = !isFinite(+input) ? 0 : +input;
+    const precision = !isFinite(+decimals) ? 0 : Math.abs(decimals);
+    const separator = typeof thousandsSeparator === 'undefined' ? ',' : thousandsSeparator;
+    const decimal = typeof decimalPoint === 'undefined' ? '.' : decimalPoint;
+    let parts: any = '';
+    const toFixed = (value, digits) => {
+      const factor = Math.pow(10, digits);
+      return '' + Math.round(value * factor) / factor;
     };
     // Fix for IE parseFloat(0.55).toFixed(0) = 0;
-    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-    if (s[0].length > 3) {
-      s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    parts = (precision ? toFixed(numericValue, precision) : '' + Math.round(numericValue)).split('.');
+    if (parts[0].length > 3) {
+      parts[0] = parts[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, separator);
     }
-    if ((s[1] || '').length < prec) {
-      s[1] = s[1] || '';
-      s[1] += new Array(prec - s[1].length + 1).join('0');
+    if ((parts[1] || '').length < precision) {
+      parts[1] = parts[1] || '';
+      parts[1] += new Array(precision - parts[1].length + 1).join('0');
     }
-    return s.join(dec);
-  }
+    return parts.join(decimal);
+  };
   // Area Chart Example
-  var ctx = document.getElementById('myAreaChart');
-  var myLineChart = new Chart(ctx, {
+  const ctx = document.getElementById('myAreaChart');
+  const areaChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: [
@@ -102,8 +107,8 @@ export function chartAreaDemo() {
               maxTicksLimit: 5,
               padding: 10,
               // Include a dollar sign in the ticks
-              callback: function (value, index, values) {
-                return '$' + number_format(value);
+              callback(value, index, values) {
+                return '$' + numberFormat(value);
               }
             },
             gridLines: {
@@ -134,12 +139,13 @@ export function chartAreaDemo() {
         mode: 'index',
         caretPadding: 10,
         callbacks: {
-          label: function (tooltipItem, chart) {
-            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-            return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+          label(tooltipItem, chart) {
+            const datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+            return datasetLabel + ': $' + numberFormat(tooltipItem.yLabel);
           }
         }
       }
     }
   });
+  return areaChart;
 }

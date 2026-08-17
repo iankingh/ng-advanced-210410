@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, NgForm, ValidatorFn, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ValidateTwId } from './ValidateTwId';
+
+type PlaceholderControl = FormControl & { placeholder?: string };
 
 export interface Login2Data {
   email:        string;
@@ -19,27 +22,27 @@ export interface Extra {
   templateUrl: './login2.component.html',
   styleUrls: ['./login2.component.css']
 })
-export class Login2Component implements OnInit {
+export class Login2Component implements OnInit, OnDestroy {
 
   data: Login2Data = {
-    "email": "doggy.huang@gmail.com",
-    "password": "123789yuiT",
-    "isRememberMe": true,
-    "extra": [
+    email: 'doggy.huang@gmail.com',
+    password: '123789yuiT',
+    isRememberMe: true,
+    extra: [
       {
-        "name": "1111",
-        "tel": "1111",
-        "twid": ""
+        name: '1111',
+        tel: '1111',
+        twid: ''
       },
       {
-        "name": "2222",
-        "tel": "2222",
-        "twid": ""
+        name: '2222',
+        tel: '2222',
+        twid: ''
       },
       {
-        "name": "3333",
-        "tel": "3333",
-        "twid": ""
+        name: '3333',
+        tel: '3333',
+        twid: ''
       }
     ]
   };
@@ -48,7 +51,11 @@ export class Login2Component implements OnInit {
 
   form: FormGroup;
 
-  constructor(private fb: FormBuilder) { }
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.origClass = document.body.className;
@@ -74,20 +81,20 @@ export class Login2Component implements OnInit {
       extra: this.fb.array([])
     });
 
-    for (let i = 0; i < this.data.extra.length; i++) {
-        this.getFormArray('extra').push(this.makeExtra());
-    }
+    this.data.extra.forEach(() => {
+      this.getFormArray('extra').push(this.makeExtra());
+    });
 
     this.form.setValue(this.data);
 
   }
 
   resetForm() {
-    this.getFormArray('extra').clear()
+    this.getFormArray('extra').clear();
 
-    for (let i = 0; i < this.data.extra.length; i++) {
-        this.getFormArray('extra').push(this.makeExtra());
-    }
+    this.data.extra.forEach(() => {
+      this.getFormArray('extra').push(this.makeExtra());
+    });
 
     this.form.reset(this.data);
   }
@@ -100,19 +107,18 @@ export class Login2Component implements OnInit {
     });
   }
 
-  makeControl(placeholder: string, validators?: ValidatorFn[]) {
-    let ctl = this.fb.control('');
+  makeControl(placeholder: string, validators?: ValidatorFn[]): PlaceholderControl {
+    const ctl = this.fb.control('') as PlaceholderControl;
     if (validators) {
       ctl.setValidators(validators);
     }
-    ctl['placeholder'] = placeholder;
+    ctl.placeholder = placeholder;
     return ctl;
   }
 
-  showError(name, validation) {
-    return this.form.get(name).invalid
-      && this.form.get(name).dirty
-      && this.form.get(name).errors[validation];
+  showError(name: string, validation: string): boolean {
+    const control = this.form.get(name);
+    return control.invalid && control.dirty && control.hasError(validation);
   }
 
   getFormArray(name: string) {
@@ -120,14 +126,15 @@ export class Login2Component implements OnInit {
   }
 
   addExtra() {
-    let extra = this.getFormArray('extra');
+    const extra = this.getFormArray('extra');
     extra.push(this.makeExtra());
   }
 
-  onSubmit(form: FormGroup) {
-    console.log(form);
+  onSubmit(form: FormGroup): void {
     if (form.valid) {
-      console.log('送出表單', form.value);
+      localStorage.setItem('token', 'demo-session');
+      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+      this.router.navigateByUrl(returnUrl);
     }
   }
 
