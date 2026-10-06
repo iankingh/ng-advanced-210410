@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
+      // Fixed client-side demo marker only; no credentials are authenticated.
       localStorage.setItem('token', 'demo-session');
       const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
       this.router.navigateByUrl(returnUrl);

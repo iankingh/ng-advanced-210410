@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class Auth2Guard implements CanActivateChild {
   constructor(private router: Router) {}
+  // Teaching demo only: client-side localStorage is user-controlled, not authorization.
   canActivateChild(
     childRoute: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {

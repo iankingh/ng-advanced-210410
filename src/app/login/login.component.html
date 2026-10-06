@@ -12,6 +12,10 @@
                 <div class="text-center">
                   <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                 </div>
+                <div class="alert alert-warning" role="alert">
+                  Teaching demo only — this form does not authenticate you. A fixed browser token only demonstrates routing;
+                  it is user-editable and provides no security. Do not enter real credentials.
+                </div>
                 <pre>data = {{ data | json }}</pre>
                 <pre>form.value = {{ form.value | json }}</pre>
                 <form class="user" #form="ngForm" (ngSubmit)="onSubmit(form)">

@@ -2,15 +2,19 @@
 
 Angular 11 課程練習專案，將 Start Bootstrap 的 SB Admin 2 後台版型整合為 Angular 應用程式，並示範路由、守衛、表單與自訂台灣身分證字號驗證。
 
+> **安全提醒：此專案的登入與路由守衛僅為前端教學示範，不提供任何安全性或真正的使用者驗證。**
+> 表單只做欄位驗證，送出後在 `localStorage` 寫入固定字串 `demo-session`；使用者可自行建立、修改或刪除它，
+> 也可直接呼叫應用程式或後端資源。請勿用於保護真實資料或部署為可依賴的登入系統。
+
 ## 練習範圍
 
 - SB Admin 2 dashboard、layout、components、utilities 與 404 頁面
 - Hash-based routing、巢狀子路由與 `components` lazy-loaded module
-- `CanActivateChild` 守衛；以瀏覽器 `localStorage` 的 demo token 判斷並導向 `/login`
+- `CanActivateChild` 守衛；以瀏覽器 `localStorage` 的 demo token 展示路由導向（不是存取控制）
 - Template-driven login form
 - Reactive login form、動態 `FormArray`、欄位驗證與表單 reset
 - `taiwan-id-validator2` 自訂 validator
-- Karma／Jasmine unit tests 與 Protractor E2E scaffold
+- Karma／Jasmine unit tests 與 Protractor E2E 流程
 
 ## 技術棧
 
@@ -71,11 +75,32 @@ Angular CLI 會以 `src/environments/environment.ts` 建置開發版，productio
 
 ## 已知狀態與限制
 
+2026-10-05 以 Node 22.22.3、`NODE_OPTIONS=--openssl-legacy-provider` 和 Chrome
+154 實跑 lint、42 個 Karma browser tests、8 個 Protractor E2E 與 build 通過。
+這是舊工具鏈的相容性驗收，不代表 Angular 11 正式支援 Node 22 或消除停止維護的限制。
+E2E 覆蓋 token／巢狀 lazy guard、帶 query／fragment 的 returnUrl、兩種表單與
+台灣身分證驗證、動態欄位／reset、logout modal／back navigation 及 404。
+
+```bash
+export NODE_OPTIONS=--openssl-legacy-provider
+export CHROME_BIN=/absolute/path/to/chrome
+export CHROMEDRIVER_BIN=/absolute/path/to/matching/chromedriver
+export E2E_HEADLESS=1
+npm run lint
+npm test -- --watch=false --browsers=ChromeHeadless
+npm run e2e -- --webdriver-update=false --port=4210
+npm run build
+```
+
+ChromeDriver 必須與 Chrome 相容；上述命令使用已準備好的 driver，不執行舊版
+webdriver-manager 的線上更新。
+
 - Angular 11、TSLint、Protractor 與多項相依套件均已過維護期。
 - 在 Node.js 26 上 production build 會因舊版 webpack/OpenSSL 相容性而失敗；請使用上述舊版 Node.js 環境。
 - unit tests 需要 Chrome；未安裝瀏覽器時 `npm test` 無法啟動 `ChromeHeadless`。
 - 兩個 login form 驗證通過後會建立本機 demo token，導回守衛保存的 `returnUrl`；
-  Logout 會清除 token。這只是前端路由教學，不是真正的登入或後端驗證流程。
+  Logout 會清除 token。這些步驟只有示範表單驗證、路由導向和 `localStorage`，沒有檢查帳密、
+  使用者身份或權限；Angular route guard 可被繞過，後端也完全沒有認證／授權。不可視為安全邊界。
 
 ## 課程資源
 
