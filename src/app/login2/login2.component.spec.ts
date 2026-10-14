@@ -86,6 +86,13 @@ describe('Login2Component', () => {
     expect(navigate).toHaveBeenCalledWith('/dashboard');
   });
 
+  it('should not navigate to an external return URL', () => {
+    spyOnProperty(TestBed.inject(ActivatedRoute).snapshot, 'queryParamMap', 'get')
+      .and.returnValue(convertToParamMap({ returnUrl: 'https://example.com' }));
+    component.onSubmit(component.form);
+    expect(navigate).toHaveBeenCalledWith('/dashboard');
+  });
+
   it('should restore the body class on destroy', () => {
     expect(document.body.className).toBe('bg-gradient-primary');
     fixture.destroy();

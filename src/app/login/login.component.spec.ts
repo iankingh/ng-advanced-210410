@@ -76,6 +76,15 @@ describe('LoginComponent', () => {
     expect(navigate).toHaveBeenCalledWith('/dashboard');
   });
 
+  it('should not navigate to an external return URL', async () => {
+    await fixture.whenStable();
+    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm);
+    spyOnProperty(TestBed.inject(ActivatedRoute).snapshot, 'queryParamMap', 'get')
+      .and.returnValue(convertToParamMap({ returnUrl: '//example.com' }));
+    component.onSubmit(form);
+    expect(navigate).toHaveBeenCalledWith('/dashboard');
+  });
+
   it('should restore the body class on destroy', () => {
     expect(document.body.className).toBe('bg-gradient-primary');
     fixture.destroy();

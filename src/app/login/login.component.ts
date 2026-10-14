@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { internalReturnUrl } from './return-url';
 
 @Component({
   templateUrl: './login.component.html',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (form.valid) {
       // Fixed client-side demo marker only; no credentials are authenticated.
       localStorage.setItem('token', 'demo-session');
-      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+      const returnUrl = internalReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
       this.router.navigateByUrl(returnUrl);
     }
   }

@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValidateTwId } from './ValidateTwId';
+import { internalReturnUrl } from '../login/return-url';
 
 type PlaceholderControl = FormControl & { placeholder?: string };
 
@@ -134,7 +135,7 @@ export class Login2Component implements OnInit, OnDestroy {
     if (form.valid) {
       // Fixed client-side demo marker only; no credentials are authenticated.
       localStorage.setItem('token', 'demo-session');
-      const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') || '/dashboard';
+      const returnUrl = internalReturnUrl(this.route.snapshot.queryParamMap.get('returnUrl'));
       this.router.navigateByUrl(returnUrl);
     }
   }
