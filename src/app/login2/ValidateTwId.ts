@@ -1,7 +1,7 @@
-import { FormControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 import { isNationalIdentificationNumberValid } from 'taiwan-id-validator2';
 
-export function ValidateTwId(c: FormControl): ValidationErrors | null {
+export function ValidateTwId(c: AbstractControl): ValidationErrors | null {
   if (!c.value) {
     return null;
   }

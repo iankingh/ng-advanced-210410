@@ -2,7 +2,7 @@ export function chartAreaDemo() {
   Chart.defaults.global.defaultFontFamily =
     'Nunito, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
   Chart.defaults.global.defaultFontColor = '#858796';
-  const numberFormat = (input, decimals?, decimalPoint?, thousandsSeparator?) => {
+  const numberFormat = (input: string | number, decimals = 0, decimalPoint = '.', thousandsSeparator = ',') => {
     // *     example: number_format(1234.56, 2, ',', ' ');
     // *     return: '1 234,56'
     input = (input + '').replace(',', '').replace(' ', '');
@@ -11,7 +11,7 @@ export function chartAreaDemo() {
     const separator = typeof thousandsSeparator === 'undefined' ? ',' : thousandsSeparator;
     const decimal = typeof decimalPoint === 'undefined' ? '.' : decimalPoint;
     let parts: any = '';
-    const toFixed = (value, digits) => {
+    const toFixed = (value: number, digits: number) => {
       const factor = Math.pow(10, digits);
       return '' + Math.round(value * factor) / factor;
     };
@@ -107,7 +107,7 @@ export function chartAreaDemo() {
               maxTicksLimit: 5,
               padding: 10,
               // Include a dollar sign in the ticks
-              callback(value, index, values) {
+              callback(value: string | number) {
                 return '$' + numberFormat(value);
               }
             },
@@ -139,7 +139,7 @@ export function chartAreaDemo() {
         mode: 'index',
         caretPadding: 10,
         callbacks: {
-          label(tooltipItem, chart) {
+          label(tooltipItem: { datasetIndex: number; yLabel: number }, chart: { datasets: { label?: string }[] }) {
             const datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
             return datasetLabel + ': $' + numberFormat(tooltipItem.yLabel);
           }

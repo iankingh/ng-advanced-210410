@@ -44,7 +44,7 @@ describe('Login2Component', () => {
       ['password', '', 'required'], ['password', 'ab', 'minlength'],
       ['password', 'a'.repeat(33), 'maxlength'], ['extra.0.twid', 'A123456788', 'twid']
     ]) {
-      const control = component.form.get(field);
+      const control = component.form.get(field)!;
       const original = control.value;
       control.setValue(value);
       expect(control.hasError(error)).toBe(true);
@@ -59,9 +59,9 @@ describe('Login2Component', () => {
     component.addExtra();
     const extra = component.getFormArray('extra');
     expect(extra.length).toBe(4);
-    extra.at(3).get('twid').setValue('A123456788');
-    extra.at(3).get('twid').markAsDirty();
-    extra.at(3).get('twid').markAsTouched();
+    extra.at(3).get('twid')!.setValue('A123456788');
+    extra.at(3).get('twid')!.markAsDirty();
+    extra.at(3).get('twid')!.markAsTouched();
     expect(component.form.invalid).toBe(true);
     component.resetForm();
     expect(extra.length).toBe(3);
@@ -72,7 +72,7 @@ describe('Login2Component', () => {
   });
 
   it('should create the token and return to the requested URL for a valid form', () => {
-    component.form.get('extra.0.twid').setValue('A123456789');
+    component.form.get('extra.0.twid')!.setValue('A123456789');
     spyOnProperty(TestBed.inject(ActivatedRoute).snapshot, 'queryParamMap', 'get')
       .and.returnValue(convertToParamMap({ returnUrl: '/page2?demo=1' }));
     component.onSubmit(component.form);

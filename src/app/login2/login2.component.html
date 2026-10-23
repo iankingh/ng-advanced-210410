@@ -21,29 +21,29 @@
                 <form class="user" [formGroup]="form" (ngSubmit)="onSubmit(form)">
                   <div class="form-group">
                     <input type="email" formControlName="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..."
-                    [class.is-invalid]="form.get('email').touched && form.get('email').invalid">
+                    [class.is-invalid]="control('email').touched && control('email').invalid">
                     <div class="invalid-feedback" *ngIf="showError('email', 'required')">請輸入 Email</div>
                     <div class="invalid-feedback" *ngIf="showError('email', 'email')">請輸入正確的 Email 格式</div>
-<pre>value = {{ form.get('email').value | json }}
-pristine = {{ form.get('email').pristine | json }}
-dirty = {{ form.get('email').dirty | json }}
-touched = {{ form.get('email').touched | json }}
-untouched = {{ form.get('email').untouched | json }}
-enabled = {{ form.get('email').enabled | json }}
-disabled = {{ form.get('email').disabled | json }}
-valid = {{ form.get('email').valid | json }}
-invalid = {{ form.get('email').invalid | json }}
-status = {{ form.get('email').status | json }}
-errors = {{ form.get('email').errors | json }}
+<pre>value = {{ control('email').value | json }}
+pristine = {{ control('email').pristine | json }}
+dirty = {{ control('email').dirty | json }}
+touched = {{ control('email').touched | json }}
+untouched = {{ control('email').untouched | json }}
+enabled = {{ control('email').enabled | json }}
+disabled = {{ control('email').disabled | json }}
+valid = {{ control('email').valid | json }}
+invalid = {{ control('email').invalid | json }}
+status = {{ control('email').status | json }}
+errors = {{ control('email').errors | json }}
 </pre>
                   </div>
                   <div class="form-group">
                     <input type="password" formControlName="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password"
-                    [class.is-invalid]="form.get('password').touched && form.get('password').invalid">
-                    <div class="invalid-feedback" *ngIf="form.get('password').invalid && form.get('password').errors.required">請輸入密碼</div>
-                    <div class="invalid-feedback" *ngIf="form.get('password').invalid && form.get('password').errors.minlength">密碼請輸入至少 {{form.get('password').errors.minlength.requiredLength}} 個字元</div>
-                    <div class="invalid-feedback" *ngIf="form.get('password').invalid && form.get('password').errors.pattern">請輸入符合規定的密碼</div>
-                    <pre>errors = {{ form.get('password').errors | json }}</pre>
+                    [class.is-invalid]="control('password').touched && control('password').invalid">
+                    <div class="invalid-feedback" *ngIf="control('password').invalid && control('password').errors?.['required']">請輸入密碼</div>
+                    <div class="invalid-feedback" *ngIf="control('password').invalid && control('password').errors?.['minlength']">密碼請輸入至少 {{control('password').errors?.['minlength']?.requiredLength}} 個字元</div>
+                    <div class="invalid-feedback" *ngIf="control('password').invalid && control('password').errors?.['pattern']">請輸入符合規定的密碼</div>
+                    <pre>errors = {{ control('password').errors | json }}</pre>
                   </div>
                   <div class="form-group">
                     <div class="custom-control custom-checkbox small">
@@ -59,15 +59,15 @@ errors = {{ form.get('email').errors | json }}
                         {{ i+1 }}
                       </div>
                       <div class="form-group">
-                        <input type="text" formControlName="name" class="form-control form-control-user" [placeholder]="g.get('name')['placeholder']">
+                        <input type="text" formControlName="name" class="form-control form-control-user" [placeholder]="control('name', g).placeholder">
                       </div>
                       <div class="form-group">
-                        <input type="text" formControlName="tel" class="form-control form-control-user" [placeholder]="g.get('tel')['placeholder']">
+                        <input type="text" formControlName="tel" class="form-control form-control-user" [placeholder]="control('tel', g).placeholder">
                       </div>
                       <div class="form-group">
-                        <input type="text" formControlName="twid" class="form-control form-control-user" [placeholder]="g.get('twid')['placeholder']"
-                        [class.is-invalid]="g.get('twid').touched && g.get('twid').invalid">
-                        <pre>{{ g.get('twid').errors | json }}</pre>
+                        <input type="text" formControlName="twid" class="form-control form-control-user" [placeholder]="control('twid', g).placeholder"
+                        [class.is-invalid]="control('twid', g).touched && control('twid', g).invalid">
+                        <pre>{{ control('twid', g).errors | json }}</pre>
                       </div>
                     </section>
 

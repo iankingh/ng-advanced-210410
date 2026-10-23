@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+  selector: 'app-page2',
+  standalone: false,
   templateUrl: './page2.component.html',
   styleUrls: ['./page2.component.css']
 })

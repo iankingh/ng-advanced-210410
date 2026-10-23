@@ -1,6 +1,6 @@
-# Angular 11 開發實戰：進階開發篇 實作練習專案
+# Angular 進階開發篇實作練習專案（Angular 22）
 
-Angular 11 課程練習專案，將 Start Bootstrap 的 SB Admin 2 後台版型整合為 Angular 應用程式，並示範路由、守衛、表單與自訂台灣身分證字號驗證。
+Angular 22 進階開發練習專案，將 Start Bootstrap 的 SB Admin 2 後台版型整合為 Angular 應用程式，並示範路由、守衛、表單與自訂台灣身分證字號驗證。
 
 > **安全提醒：此專案的登入與路由守衛僅為前端教學示範，不提供任何安全性或真正的使用者驗證。**
 > 表單只做欄位驗證，送出後在 `localStorage` 寫入固定字串 `demo-session`；使用者可自行建立、修改或刪除它，
@@ -14,38 +14,34 @@ Angular 11 課程練習專案，將 Start Bootstrap 的 SB Admin 2 後台版型�
 - Template-driven login form
 - Reactive login form、動態 `FormArray`、欄位驗證與表單 reset
 - `taiwan-id-validator2` 自訂 validator
-- Karma／Jasmine unit tests 與 Protractor E2E 流程
+- Karma／Jasmine unit tests 與 Playwright E2E 流程
 
 ## 技術棧
 
-- Angular `11.2.14`、Angular CLI `11.2.19`、Angular DevKit `0.1102.19`
-- TypeScript `4.1.6`、RxJS `6.6.7`、Zone.js `0.10.3`、tslib `2.8.1`
-- Karma／Jasmine、TSLint／Codelyzer、Protractor
-- SB Admin 2 靜態 assets
+- Angular `22.2.3`、Angular CLI／build `22.2.4`
+- TypeScript `6.0.x`（Angular 22 相容範圍）、RxJS `7.8.2`、Zone.js `0.16.3`
+- Node.js `24.22.1` LTS、npm `11.20.0`；`.nvmrc` 與 `package.json` 同步固定環境
+- Karma `6.4.4`／Jasmine `6`、ESLint `10`、Playwright `1.64.1`
+- 保留 SB Admin 2 靜態 assets 與 NgModule 教學架構
 
-## 環境需求
+## 安裝與執行
 
-此專案使用已停止維護的 Angular 11 工具鏈。Angular CLI 11 metadata 要求 Node.js `>=10.13.0`，npm `^6.11.0` 或 `^7.5.6`；這些是舊套件的 engine 宣告，不代表目前仍受安全維護。Node 22 曾用於本專案相容性驗收，但不在 Angular 11 的官方支援範圍內。
-
-瀏覽器測試與 E2E 另需可用的 Chrome／Chromium。專案不需 API server、`.env` 或秘密設定。
-
-## 安裝
-
-目前不提交 `package-lock.json`（原檔為空），且新版 npm 會遇到 `codelyzer` peer dependency 衝突，因此不能使用 `npm ci`。使用：
+先準備 Node.js 24.22.1；使用 nvm 的環境可執行 `nvm use`。
 
 ```bash
-npm install --legacy-peer-deps
+npm ci
+npm start                  # ng serve --open；http://localhost:4200
+npm run build              # production build 至 dist/demo1/browser
+npm run type-check         # TypeScript 相容性檢查
+npm run lint               # ESLint 檢查 TypeScript
+npm test -- --watch=false --browsers=ChromeHeadless
+npx playwright install chromium
+npm run e2e                # 自動啟動本機伺服器，執行 8 個瀏覽器案例
 ```
 
-## 開發與建置
-
-```bash
-npm start              # ng serve --open；預設 http://localhost:4200
-npm run build          # production build 至 dist/demo1
-npm test               # Karma/Jasmine；需要 Chrome
-npm run lint           # TSLint
-npm run e2e            # Protractor E2E；需要 Chrome／WebDriver
-```
+Karma 需要 Chrome／Chromium。可設定 `CHROME_BIN=/absolute/path/to/chrome`，
+Karma 與 Playwright 都會使用該瀏覽器；Playwright 不需 ChromeDriver。
+專案不需 API server、`.env` 或秘密設定。
 
 ## 主要結構
 
@@ -73,38 +69,21 @@ Angular CLI 會以 `src/environments/environment.ts` 建置開發版，productio
 - `/#/login`、`/#/login2`
 - 其他路徑顯示 404 頁面
 
-## 已知狀態與限制
+## 升級與驗證
 
-2026-10-07 本次覆核以 Node 20.15.0 和 `NODE_OPTIONS=--openssl-legacy-provider` 執行 lint、
-build 並通過。另以 Node 26.5.0、npm 12.1.0、相同 OpenSSL 相容選項及快取 Chrome Headless 153
-重跑 46 個 Karma browser tests，全數通過。這些是舊工具鏈的相容性驗收，不代表 Angular 11
-正式支援 Node 20／22／26 或消除停止維護的限制。
-本次沒有重跑 Protractor E2E：缺少 WebDriver `update-config.json`。工作區 `FLEET_STATUS`
-記錄的 8 個 E2E 通過是 2026-10-05 在 Node 22.22.3／Chrome 154 環境的先前結果，不是本次驗證。
+2026-10-23 更新至最新正式版 Angular 22，使用現行 application builder，
+明確設定 NgModule components／directive 的 `standalone: false` 與 Zone change detection。
+Reactive forms 使用 Angular 的 `UntypedForm*` 相容類別保留既有教材行為。
+移除舊 webpack、TSLint／Codelyzer 與 Protractor 設定；ESLint 與 Playwright 接手檢查，
+不再需要 `--legacy-peer-deps` 或 `--openssl-legacy-provider`。
+`package-lock.json` 現在提交至版本控制，使用 `npm ci` 重現安裝。
 
-```bash
-export NODE_OPTIONS=--openssl-legacy-provider
-export CHROME_BIN=/absolute/path/to/chrome
-export CHROMEDRIVER_BIN=/absolute/path/to/matching/chromedriver
-export E2E_HEADLESS=1
-npm run lint
-npm test -- --watch=false --browsers=ChromeHeadless
-npm run e2e -- --webdriver-update=false --port=4210
-npm run build
-```
+既有單元測試保留登入、驗證器、路由守衛與站內 returnUrl 案例；8 個 E2E 案例涵蓋
+兩種表單、動態欄位、lazy route、Bootstrap 登出 modal、token 清除與 404。
+實際執行結果見工作區 `NODE_UPGRADE_REPORT.md`。
 
-ChromeDriver 必須與 Chrome 相容；上述命令使用已準備好的 driver，不執行舊版
-webdriver-manager 的線上更新。
-
-- Angular 11、TSLint、Protractor 與多項相依套件均已過維護期。2026-10-07 以當時 npm registry metadata 檢查，Angular 11.2.14、CLI 11.2.19、TypeScript 4.1.6 等已是各自相容版本線的最新版本；Angular 11 沒有可修復目前 Angular 安全公告的相容更新。此教學刻意保留 Angular 11 基線，視為歷史課程；不進行 app-wide／Angular-major migration，也不宣稱可安全部署或無漏洞。
-- 專案刻意不提交 `package-lock.json`。直接執行 `npm audit` 需要 lockfile；要檢查目前相依解析，先以 `npm install --package-lock-only --legacy-peer-deps` 產生臨時 lockfile，再執行 `npm audit`，不要把臨時檔當成正式鎖定版本。本次以 npm `12.1.0`、2026-10-07 的臨時解析結果為 **99 項：4 critical、42 high、41 moderate、12 low**。
-- Critical 項目包含 `form-data`、`loader-utils`、已棄用且無上游修補版的 `request`，以及 `tar`；它們經由 Angular CLI／DevKit、webpack loaders、Protractor／webdriver-manager 等建置與測試工具傳遞引入。`loader-utils` 與 `form-data` 有較新的 leaf 版本可供測試 override，但 `request` 沒有修補版，`tar` 的安全版跨 major 且提高 Node 要求；這類 override 不能完整清除風險或保證課程工具鏈相容。完整修復需要遷移至受支援的 Angular major，並更新／替換舊 build、lint、E2E 工具，不是安全的 Angular 11 patch。此為維持歷史課程用途的明確例外，殘留 advisory 必須被接受並限制於隔離的教學／開發環境。
-- 登入頁只接受站內 `returnUrl`；外部、protocol-relative 或含反斜線的目的地會回到 dashboard。這只避免不安全的導向，不會讓教學用 localStorage token 變成認證或授權。
-- 在 Node.js 26 上 production build 會因舊版 webpack/OpenSSL 相容性而失敗；請使用上述舊版 Node.js 環境。
-- unit tests 需要 Chrome／Chromium；本次已使用快取 Chromium 執行成功。E2E 還需要 matching WebDriver；本次缺少 WebDriver `update-config.json`，未重跑 Protractor。
-- 兩個 login form 驗證通過後會建立本機 demo token，導回守衛保存的 `returnUrl`；
-  Logout 會清除 token。這些步驟只有示範表單驗證、路由導向和 `localStorage`，沒有檢查帳密、
-  使用者身份或權限；Angular route guard 可被繞過，後端也完全沒有認證／授權。不可視為安全邊界。
+登入流程仍是可由使用者修改的 localStorage 教學示範，沒有後端認證或授權。
+SB Admin 2 的既有靜態 vendor 檔案不由 npm 管理；此輪只升級應用程式與 npm 工具鏈。
 
 ## 課程資源
 

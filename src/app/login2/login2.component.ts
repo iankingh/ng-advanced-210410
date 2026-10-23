@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValidateTwId } from './ValidateTwId';
 import { internalReturnUrl } from '../login/return-url';
 
-type PlaceholderControl = FormControl & { placeholder?: string };
+type PlaceholderControl = UntypedFormControl & { placeholder?: string };
 
 export interface Login2Data {
   email:        string;
@@ -20,6 +20,8 @@ export interface Extra {
 }
 
 @Component({
+  selector: 'app-login2',
+  standalone: false,
   templateUrl: './login2.component.html',
   styleUrls: ['./login2.component.css']
 })
@@ -50,10 +52,10 @@ export class Login2Component implements OnInit, OnDestroy {
 
   origClass = '';
 
-  form: FormGroup;
+  form!: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -63,7 +65,7 @@ export class Login2Component implements OnInit, OnDestroy {
     document.body.className = 'bg-gradient-primary';
 
     this.form = this.fb.group({
-      email: new FormControl('user2@example.com', {
+      email: new UntypedFormControl('user2@example.com', {
         validators: [
           Validators.required,
           Validators.email
@@ -119,11 +121,17 @@ export class Login2Component implements OnInit, OnDestroy {
 
   showError(name: string, validation: string): boolean {
     const control = this.form.get(name);
-    return control.invalid && control.dirty && control.hasError(validation);
+    return !!control && control.invalid && control.dirty && control.hasError(validation);
+  }
+
+  control(name: string, group: AbstractControl = this.form): PlaceholderControl {
+    const control = group.get(name);
+    if (!control) throw new Error(`Missing form control: ${name}`);
+    return control as PlaceholderControl;
   }
 
   getFormArray(name: string) {
-    return this.form.get(name) as FormArray;
+    return this.form.get(name) as UntypedFormArray;
   }
 
   addExtra() {
@@ -131,7 +139,7 @@ export class Login2Component implements OnInit, OnDestroy {
     extra.push(this.makeExtra());
   }
 
-  onSubmit(form: FormGroup): void {
+  onSubmit(form: UntypedFormGroup): void {
     if (form.valid) {
       // Fixed client-side demo marker only; no credentials are authenticated.
       localStorage.setItem('token', 'demo-session');

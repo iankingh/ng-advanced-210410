@@ -42,10 +42,10 @@ describe('LoginComponent', () => {
 
   it('should reject invalid fields and Taiwan ID checksums without creating a token', async () => {
     await fixture.whenStable();
-    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm);
+    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm)!;
     for (const [field, value] of [['email', 'invalid'], ['password', 'abc'], ['extra.tel', '123'],
       ['extra.twid', 'A123456788']]) {
-      const control = form.form.get(field);
+      const control = form.form.get(field)!;
       const original = control.value;
       control.setValue(value);
       expect(form.invalid).toBe(true);
@@ -58,8 +58,8 @@ describe('LoginComponent', () => {
 
   it('should create the demo token and return to the preserved URL only when valid', async () => {
     await fixture.whenStable();
-    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm);
-    form.form.get('extra.twid').setValue('A123456789');
+    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm)!;
+    form.form.get('extra.twid')!.setValue('A123456789');
     spyOnProperty(TestBed.inject(ActivatedRoute).snapshot, 'queryParamMap', 'get')
       .and.returnValue(convertToParamMap({ returnUrl: '/components/cards?view=all' }));
     expect(form.valid).toBe(true);
@@ -70,7 +70,7 @@ describe('LoginComponent', () => {
 
   it('should default to the dashboard with optional extra fields left empty', async () => {
     await fixture.whenStable();
-    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm);
+    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm)!;
     expect(form.valid).toBe(true);
     component.onSubmit(form);
     expect(navigate).toHaveBeenCalledWith('/dashboard');
@@ -78,7 +78,7 @@ describe('LoginComponent', () => {
 
   it('should not navigate to an external return URL', async () => {
     await fixture.whenStable();
-    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm);
+    const form = fixture.debugElement.query(By.directive(NgForm)).injector.get(NgForm)!;
     spyOnProperty(TestBed.inject(ActivatedRoute).snapshot, 'queryParamMap', 'get')
       .and.returnValue(convertToParamMap({ returnUrl: '//example.com' }));
     component.onSubmit(form);

@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { internalReturnUrl } from './return-url';
 
 @Component({
+  selector: 'app-login',
+  standalone: false,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
